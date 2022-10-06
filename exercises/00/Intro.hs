@@ -5,8 +5,6 @@
 {-# OPTIONS_GHC -fwarn-incomplete-uni-patterns #-} -- warn about incomplete patterns v2
 module Intro where
 
--- TODO: ask how many have signed up for elective, it's same time as this
-
 ---------------------------------
 
 -- TODO: me
@@ -15,7 +13,7 @@ module Intro where
 
 -- TODO: administrivia - georgi look at README!
 -- live for now
--- ask about git knowledge
+-- ask about git knowledge - 3
 -- github repo - https://github.com/googleson78/fp-lab-2022-23
 
 -- TODO: exposition
@@ -25,7 +23,7 @@ module Intro where
 --   (Typed) Functional Programming is
 --     - Defining Datatypes To Represent Problems
 --     - Defining Functions To Create New Data From Old
---
+
 --
 -- garbage collection
 -- expressive static types
@@ -65,10 +63,10 @@ module Intro where
 -- TODO: syntax and values
 -- ghci - interactive development
 -- calling functions
--- base types
 -- function definition
 -- type declarations
--- pattern matching
+
+-- base types
 -- if
 -- operators
 -- holes
@@ -86,20 +84,28 @@ g :: Int -> Int
 g = succ
 
 -- type inference and hover
+
+-- >>> [1,2,3] ++ [4,5]
+-- [1,2,3,4,5]
+
+h :: Int -> Int
 h x = g (f x)
 
 -- evaluate code in >>>
 
 -- it can also enable extensions and do automatic imports, but we won't be lookin at that for now
-
--- use pattern matches!
+-}
 -- >>> fact 5
 -- 120
 -- >>> fact 7
 -- 5040
-fact :: Integer -> Integer
-fact n = _
+fact :: Int -> Int
+fact n =
+  if n == 0
+  then 1
+  else n * fact (n - 1)
 
+{-
 -- EXAMPLES
 -- >>> fib 0
 -- 0
