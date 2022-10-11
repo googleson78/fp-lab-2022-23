@@ -108,11 +108,11 @@ fact n =
 {-
 -- EXAMPLES
 -- >>> fib 0
--- 0
+-- 1
 -- >>> fib 4
--- 3
+-- 5
 -- >>> fib 8
--- 21
+-- 34
 fib :: Integer -> Integer
 fib = _
 
