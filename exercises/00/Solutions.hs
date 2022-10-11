@@ -120,7 +120,7 @@ fib n =
 
 -- use the following "mathematical definition" to implement addition on natural numbers:
 -- myPlus x y = y                 if x == 0
--- myPlus x y = succ(pred(x) + y) else
+-- myPlus x y = succ(myPlus(pred(x), y)) else
 -- Note that succ and pred are functions that already exist
 -- succ x = x + 1
 -- pred x = x - 1
