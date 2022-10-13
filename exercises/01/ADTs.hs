@@ -1,23 +1,67 @@
 {-# LANGUAGE EmptyDataDeriving #-}
+
 {-# OPTIONS_GHC -fwarn-incomplete-patterns #-}     -- cover all cases!
 {-# OPTIONS_GHC -fwarn-unused-matches #-}          -- use all your pattern matches!
 {-# OPTIONS_GHC -fwarn-missing-signatures #-}      -- write all your toplevel signatures!
 {-# OPTIONS_GHC -fwarn-name-shadowing #-}          -- use different names!
 {-# OPTIONS_GHC -fwarn-incomplete-uni-patterns #-} -- warn about incomplete patterns v2
 
+-- warnings
+
 module ADTs where
 
 -- TODO: talk about
 -- * pls write on teams+join teams
--- * waiting to get timetable?
 -- * first homework coming soon :)
+-- * waiting to get timetable?
 
 -- show:
 -- * pragmas on the top of files
--- * where from last week
 -- * remind about sections
 
 -- pattern matching
+
+-- struct Point {
+--   int x;
+--   int y;
+-- };
+-- Point pt;
+-- pt.x
+-- pt.y
+-- Point{3, 5}
+
+-- analogue with C structs or something
+-- example point
+-- mention constructor name requirements, Mk convention
+data Point = MkPoint Float Float
+-- data <name1> = <name2> ...<field>....
+  deriving Show
+
+isInFirstQuadrant :: Point -> Bool
+isInFirstQuadrant (MkPoint pesho gosho) =
+  pesho > 0 && gosho > 0
+  -- (&&) ((>) pesho 0) ((>) gosho 0)
+
+-- isInFirstQuadrant (MkPoint 5.0 3.0)
+
+invert :: Point -> Point
+invert pt =
+  case pt of
+    MkPoint x y -> MkPoint (negate x) (negate y)
+
+
+data MyBool
+  = MyTrue
+  | MyFalse
+  deriving Show
+
+myNot :: MyBool -> MyBool
+--myNot b =
+--  case b of
+--    MyFalse -> MyTrue
+--    MyTrue -> MyFalse
+myNot MyFalse = MyTrue
+myNot MyTrue = MyFalse
 
 -- show Bool
 -- show case here?
@@ -25,51 +69,107 @@ module ADTs where
 
 -- RPS - enum example
 data RPS
+  = Rock
+  | Scissors
+  | Paper
   deriving Show
 
 -- show ignore pattern match
 -- pattern evaluation order
 beats :: RPS -> RPS -> Bool
-beats = undefined
-
--- analogue with C structs or something
--- example point
--- mention constructor name requirements, Mk convention
-data Point
-  deriving Show
-
-isInFirstQuadrant :: Point -> Bool
-isInFirstQuadrant = undefined
-
-invert :: Point -> Point
-invert = undefined
+beats Rock Scissors = True
+beats Scissors Paper = True
+beats Paper Rock = True
+beats _ _ = False
 
 -- cats n dogs
 -- colours n breeds
 data Animal
+  = Dog Breed
+  | Cat Colour
   deriving Show
+
+data Colour = Orange | Black
+  deriving Show
+data Breed = Labrador | Husky | Borzoi
+  deriving Show
+
+showAnimal :: Animal -> String
+showAnimal (Dog Borzoi) = "weird"
+showAnimal (Dog d) =
+ case d of
+   Husky -> "bad boy"
+   Labrador -> "very hungry boy"
+showAnimal (Cat Orange) = "lasagna"
+showAnimal (Cat Black) = "amorphous blob"
+
+-- showAnimal (Dog Husky)
+--
+-- case Husky of
+--   Husky -> "bad boy"
+--   Labrador -> "very hungry boy"
+--
+-- "bad boy"
+
 
 -- example for animal value
 -- example with animal matching
 -- showAnimal
 
 -- explain the encoding (peano)
+-- Zero ~ 0
+-- Succ Zero ~ 1
+-- Succ (Succ Zero) ~ 2
+-- Succ (Succ (Succ Zero)) ~ 2
+--
+-- data Point = MkPoint Float Float
 data Nat
+  = Zero
+  | Succ Nat
+  -- successor
   deriving Show
 
 -- implement
 integerToNat :: Integer -> Nat
-integerToNat = undefined
+integerToNat 0 = Zero
+integerToNat n =
+  Succ (integerToNat (n - 1))
+
+
+-- implement
+natToInteger :: Nat -> Integer
+natToInteger Zero = 0
+natToInteger (Succ n') =
+  1 + natToInteger n'
+
+-- natToInteger (Succ (Succ (Succ Zero)))
+-- 1 + (natToInteger (Succ (Succ Zero)))
+-- 1 + 1 + (natToInteger (Succ Zero))
+-- 1 + 1 + 1 + (natToInteger Zero)
+-- 1 + 1 + 1 + 0
+-- 3
 
 -- evaluate manually?
 
 -- implement
-natToInteger :: Nat -> Integer
-natToInteger = undefined
-
--- implement
 addNat :: Nat -> Nat -> Nat
-addNat = undefined
+addNat Zero m = m
+addNat (Succ n) m =
+  Succ (addNat n m)
+
+-- addNat (Succ (Succ Zero)) (Succ Zero)
+-- Succ (addNat (Succ Zero) (Succ Zero))
+-- Succ (Succ (addNat Zero (Succ Zero)))
+-- Succ (Succ (Succ Zero))
+
+  --addNat n (Succ m)
+-- addNat (Succ (Succ Zero)) (Succ Zero)
+-- n == Succ Zero; m == Succ Zero
+-- addNat n (Succ m)
+-- addNat (Succ Zero) (Succ (Succ m))
+-- addNat Zero (Succ (Succ (Succ m)))
+-- Succ (Succ (Succ m))
+-- addNat (Succ (Succ Zero)) (Succ Zero)
 
 -- TASK
 -- define what the "next" throw you can do is in the "usual" ordering of RPS
