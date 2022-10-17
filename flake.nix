@@ -13,6 +13,8 @@
 
         buildInputs = [
           hsPkgs.ghc
+          hsPkgs.haskell-language-server
+          hsPkgs.hlint
           stack-wrapped
         ];
 
