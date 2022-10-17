@@ -1,0 +1,5 @@
+# DeriveGeneric is actually used when -DCAN
+- ignore:
+    name: Unused LANGUAGE pragma
+    within:
+      - Instances
