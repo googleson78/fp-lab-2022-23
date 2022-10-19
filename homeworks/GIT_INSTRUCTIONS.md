@@ -124,3 +124,8 @@ git config --global merge.conflictstyle diff3
 
 Тъй като `git checkout` прави много неща, са решили да отделят "менежиране на файлове" от "сменяне на клонове" частите една от друга.
 За повече информация вижте [тук](https://github.blog/2019-08-16-highlights-from-git-2-23/#experimental-alternatives-for-git-checkout)
+
+### Допълнителни ресурси
+#### https://ohshitgit.com/ - "обърках нещо, помощ"
+#### ["Официална" git книжка](https://git-scm.com/book/en/v2)
+Препоръчвам (в изброения ред) главите 1, 2, 3, 10 и потенциално после и 8.1, 7.1, 7.2, 7.3, 7.6, 7.7, 7.10, 8.2.
