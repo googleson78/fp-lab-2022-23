@@ -77,11 +77,9 @@ addBinarySpec :: Spec
 addBinarySpec = describe "addBinary" do
   it "works on End (End :. One)" do
     addBinary End (End :. One) `shouldBe` End :. One
-  it "works on (End :. Zero) End" do
-    addBinary (End :. Zero) End `shouldBe` End :. Zero
   it "works on (End :. Zero) (End :. One)" do
     addBinary (End :. Zero) (End :. One) `shouldBe` End :. One
-  it "works on (End :. One) (End :. Zero)" do
+  it "works on (End :. Zero) (End :. One)" do
     addBinary (End :. One) (End :. Zero) `shouldBe` End :. One
   it "works on (End :. One :. Zero) (End :. One :. Zero :. Zero)" do
     addBinary (End :. One :. Zero) (End :. One :. Zero :. Zero) `shouldBe` End :. One :. One :. Zero
