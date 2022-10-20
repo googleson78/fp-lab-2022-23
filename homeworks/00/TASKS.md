@@ -178,8 +178,6 @@ End :. One :. Zero
 ```haskell
 > addBinary End (End :. One)
 End :. One
-> addBinary (End :. Zero) End
-End :. Zero
 > addBinary (End :. Zero) (End :. One)
 End :. One
 > addBinary (End :. One) (End :. Zero)
