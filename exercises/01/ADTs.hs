@@ -203,11 +203,11 @@ eqRPS = undefined
 -- define a shorter version of beats by uisng next and eqRPS
 -- EXAMPLES
 -- >>> beats' Rock Paper
--- True
--- >>> beats' Rock Scissors
 -- False
--- >>> beats' Paper Scissors
+-- >>> beats' Rock Scissors
 -- True
+-- >>> Paper `beats'` Scissors
+-- False
 beats' :: RPS -> RPS -> Bool
 beats' = undefined
 
