@@ -1,22 +1,31 @@
 {-# LANGUAGE EmptyDataDeriving #-}
-
-{-# OPTIONS_GHC -fwarn-incomplete-patterns #-}     -- cover all cases!
-{-# OPTIONS_GHC -fwarn-unused-matches #-}          -- use all your pattern matches!
-{-# OPTIONS_GHC -fwarn-missing-signatures #-}      -- write all your toplevel signatures!
-{-# OPTIONS_GHC -fwarn-name-shadowing #-}          -- use different names!
-{-# OPTIONS_GHC -fwarn-incomplete-uni-patterns #-} -- warn about incomplete patterns v2
+-- cover all cases!
+{-# OPTIONS_GHC -fwarn-incomplete-patterns #-}
+-- warn about incomplete patterns v2
+{-# OPTIONS_GHC -fwarn-incomplete-uni-patterns #-}
+-- write all your toplevel signatures!
+{-# OPTIONS_GHC -fwarn-missing-signatures #-}
+-- use different names!
+{-# OPTIONS_GHC -fwarn-name-shadowing #-}
+-- use all your pattern matches!
+{-# OPTIONS_GHC -fwarn-unused-matches #-}
 
 -- warnings
 
 module ADTs where
 
 -- TODO: talk about
+
 -- * pls write on teams+join teams
+
 -- * first homework coming soon :)
+
 -- * waiting to get timetable?
 
 -- show:
+
 -- * pragmas on the top of files
+
 -- * remind about sections
 
 -- pattern matching
@@ -34,13 +43,14 @@ module ADTs where
 -- example point
 -- mention constructor name requirements, Mk convention
 data Point = MkPoint Float Float
--- data <name1> = <name2> ...<field>....
-  deriving Show
+  -- data <name1> = <name2> ...<field>....
+  deriving (Show)
 
 isInFirstQuadrant :: Point -> Bool
 isInFirstQuadrant (MkPoint pesho gosho) =
   pesho > 0 && gosho > 0
-  -- (&&) ((>) pesho 0) ((>) gosho 0)
+
+-- (&&) ((>) pesho 0) ((>) gosho 0)
 
 -- isInFirstQuadrant (MkPoint 5.0 3.0)
 
@@ -49,14 +59,13 @@ invert pt =
   case pt of
     MkPoint x y -> MkPoint (negate x) (negate y)
 
-
 data MyBool
   = MyTrue
   | MyFalse
-  deriving Show
+  deriving (Show)
 
 myNot :: MyBool -> MyBool
---myNot b =
+-- myNot b =
 --  case b of
 --    MyFalse -> MyTrue
 --    MyTrue -> MyFalse
@@ -72,7 +81,7 @@ data RPS
   = Rock
   | Scissors
   | Paper
-  deriving Show
+  deriving (Show)
 
 -- show ignore pattern match
 -- pattern evaluation order
@@ -87,19 +96,20 @@ beats _ _ = False
 data Animal
   = Dog Breed
   | Cat Colour
-  deriving Show
+  deriving (Show)
 
 data Colour = Orange | Black
-  deriving Show
+  deriving (Show)
+
 data Breed = Labrador | Husky | Borzoi
-  deriving Show
+  deriving (Show)
 
 showAnimal :: Animal -> String
 showAnimal (Dog Borzoi) = "weird"
 showAnimal (Dog d) =
- case d of
-   Husky -> "bad boy"
-   Labrador -> "very hungry boy"
+  case d of
+    Husky -> "bad boy"
+    Labrador -> "very hungry boy"
 showAnimal (Cat Orange) = "lasagna"
 showAnimal (Cat Black) = "amorphous blob"
 
@@ -110,7 +120,6 @@ showAnimal (Cat Black) = "amorphous blob"
 --   Labrador -> "very hungry boy"
 --
 -- "bad boy"
-
 
 -- example for animal value
 -- example with animal matching
@@ -127,14 +136,13 @@ data Nat
   = Zero
   | Succ Nat
   -- successor
-  deriving Show
+  deriving (Show)
 
 -- implement
 integerToNat :: Integer -> Nat
 integerToNat 0 = Zero
 integerToNat n =
   Succ (integerToNat (n - 1))
-
 
 -- implement
 natToInteger :: Nat -> Integer
@@ -162,7 +170,7 @@ addNat (Succ n) m =
 -- Succ (Succ (addNat Zero (Succ Zero)))
 -- Succ (Succ (Succ Zero))
 
-  --addNat n (Succ m)
+-- addNat n (Succ m)
 -- addNat (Succ (Succ Zero)) (Succ Zero)
 -- n == Succ Zero; m == Succ Zero
 -- addNat n (Succ m)
@@ -205,18 +213,26 @@ beats' = undefined
 
 -- TASK
 -- Your task is to model a few of the pieces of the game of Belote
+
 -- * implement a data type for Ranks (7 8 9 10 J etc)
+
 data Rank
-  deriving Show
+  deriving (Show)
+
 -- * implement a data type for Suits
+
 data Suit
-  deriving Show
+  deriving (Show)
+
 -- * implement a data type for a Card
+
 data Card
-  deriving Show
+  deriving (Show)
+
 -- * implement a data type for Contracts (all trump, no trump etc)
+
 data Contract
-  deriving Show
+  deriving (Show)
 
 -- Given a Card and a Contract, implement a check whether the card is of a trump suit
 isTrump :: Contract -> Card -> Bool
@@ -277,14 +293,18 @@ compareNat = undefined
 -- or alternatively, a very simple programming language
 --
 -- we can build up Expr(essions) by
+
 -- * injecting integers as a value directly - Val
+
 -- * stating that we want to add the result of two calculations - Plus
+
 -- * stating that we want to multiply the result of two calculations - Mult
+
 data Expr
   = Val Integer
   | Plus Expr Expr
   | Mult Expr Expr
-  deriving Show
+  deriving (Show)
 
 -- README - SECTIONS
 --
@@ -300,7 +320,9 @@ data Expr
 -- be?
 -- We can use these pragmas
 infixr 7 `Plus`
+
 infixr 8 `Mult`
+
 -- infixr(ight)
 -- to tell the compiler that when used in a section/as operators
 -- Mult has higher priority than Plus, e.g.
