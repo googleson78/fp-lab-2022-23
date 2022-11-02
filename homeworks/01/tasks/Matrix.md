@@ -192,7 +192,7 @@ matrix x0 x1 x2 y0 y1 y2 z0 z1 z2 =
 
 ## Задачи
 
-### ?т. `constantMatrix :: a -> Matrix a`
+### 1т. `constantMatrix :: a -> Matrix a`
 
 Конструираите матрица, която на всички индекси има подадената стойност.
 
@@ -205,7 +205,7 @@ matrix x0 x1 x2 y0 y1 y2 z0 z1 z2 =
 'E' 'E' 'E'
 ```
 
-### ?т. `diagonalMatrix :: a -> Matrix (Maybe a)`
+### 0.5т. `diagonalMatrix :: a -> Matrix (Maybe a)`
 
 Конструирайте матрица, която по главния си диагонал си има подадения елемент(`Just`),
 а на всички други места няма нищо (`Nothing`).
@@ -219,7 +219,7 @@ Nothing Just True Nothing
 Nothing Nothing Just True
 ```
 
-### ?т. `otherDiagonalMatrix :: a -> Matrix (Maybe a)`
+### 0.5т. `otherDiagonalMatrix :: a -> Matrix (Maybe a)`
 
 Конструирайте матрица, която по не-главния си диагонал си има подадения елемент(`Just`),
 а на всички други места няма нищо (`Nothing`).
@@ -233,7 +233,7 @@ Nothing Just False Nothing
 Just False Nothing Nothing
 ```
 
-### ?т. `addMatrix :: Matrix Integer -> Matrix Integer -> Matrix Integer`
+### 1т. `addMatrix :: Matrix Integer -> Matrix Integer -> Matrix Integer`
 
 Съберете подадените матрици покомпонентно.
 
@@ -257,7 +257,7 @@ m2 =
 0 0 0
 ```
 
-### ?т. `showMatrix :: (a -> String) -> Matrix a -> String`
+### 1т. `showMatrix :: (a -> String) -> Matrix a -> String`
 
 По подадена функция за конвертиране до низ на елемент, конвертирайте цялата матрица до низ.
 
@@ -271,7 +271,7 @@ m2 =
 Няма примери(нито пък тестове) тъй като имате свободата да си изберете как ще показвате матрици,
 но за примерно показване може да видите всички други примери. (hehe)
 
-### ?т. `ix :: Three -> Three -> Matrix a -> a`
+### 0.5т. `ix :: Three -> Three -> Matrix a -> a`
 
 По дадени два индекса, извадете от матрицата елементът, който седи на тези два индекса.
 
@@ -289,7 +289,7 @@ m =
 2
 ```
 
-### ?т. `getRow :: Three -> Matrix a -> Thrice a`
+### 0.5т. `getRow :: Three -> Matrix a -> Thrice a`
 
 По даден индекс, върнете съответния му ред от подадената матрица.
 
@@ -305,7 +305,7 @@ m =
 (7,8,9)
 ```
 
-### ?т. `getCol :: Three -> Matrix a -> Thrice a`
+### 0.5т. `getCol :: Three -> Matrix a -> Thrice a`
 
 По даден индекс, върнете съответната му колона от подадената матрица.
 
@@ -321,7 +321,7 @@ m =
 (2,5,8)
 ```
 
-### ?т. `getDiag :: Matrix a -> Thrice a`
+### 0.5т. `getDiag :: Matrix a -> Thrice a`
 
 Върнете главния диагонал на матрицата.
 
@@ -337,7 +337,7 @@ m =
 (1,5,9)
 ```
 
-### ?т. `getOtherDiag :: Matrix a -> Thrice a`
+### 0.5т. `getOtherDiag :: Matrix a -> Thrice a`
 
 Върнете не-главния диагонал на матрицата.
 
@@ -353,7 +353,7 @@ m =
 (3,5,7)
 ```
 
-### ?т. `transpose :: Matrix a -> Matrix a`
+### 0.5т. `transpose :: Matrix a -> Matrix a`
 
 Транспонирайте матрицата.
 
@@ -371,7 +371,7 @@ m =
 3 6 9
 ```
 
-### ?т. `foldThriceWith :: (a -> a -> a) -> Thrice a -> a`
+### 2т. `foldThriceWith :: (a -> a -> a) -> Thrice a -> a`
 
 По даден `Thrice a`, комбинирайте всичките му стойности използвайки подадената
 двуместна операция.
@@ -408,7 +408,7 @@ False
 3
 ```
 
-### ?т. `foldMatrixWith :: (a -> a -> a) -> Matrix a -> a`
+### 2т. `foldMatrixWith :: (a -> a -> a) -> Matrix a -> a`
 
 Аналогично на функцията за `Thrice`, комбинирайте всичките стойности на матрицата изполвайки
 подаденете двуместна операция.
@@ -437,7 +437,7 @@ True
 0
 ```
 
-### ?т. `eqMatrix :: (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool`
+### 2т. `eqMatrix :: (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool`
 
 По подадена функция за равнество (`(a -> a -> Bool)`) за `a`-та и две матрици от `a`-та,
 върнете дали двете матрици са равни.
@@ -451,7 +451,7 @@ True
 True
 ```
 
-### ?т. `imapThrice :: (Three -> a -> b) -> Thrice a -> Thrice b`
+### 1т. `imapThrice :: (Three -> a -> b) -> Thrice a -> Thrice b`
 
 По подадена функция, която по елемент(`a`) и индекса му в дадения `Thrice` връща `b`,
 превърнете `Thrice a` към `Thrice b`.
@@ -467,7 +467,7 @@ True
 (0,2,6)
 ```
 
-### ?т. `mapThrice :: (a -> b) -> Thrice a -> Thrice b`
+### 0.5т. `mapThrice :: (a -> b) -> Thrice a -> Thrice b`
 
 По подадена функция обръщаща `a`-та към `b`-та, трансформирйате `Thrice a` към `Thrice b`.
 
@@ -478,7 +478,7 @@ True
 (False,True,False)
 ```
 
-### ?т. `imapMatrix :: (Three -> Three -> a -> b) -> Matrix a -> Matrix b`
+### 3т. `imapMatrix :: (Three -> Three -> a -> b) -> Matrix a -> Matrix b`
 
 Аналогично на `imapThrice`, но сега с два индекса.
 
@@ -491,7 +491,7 @@ True
 (Two,Zero,7) (Two,One,8) (Two,Two,9)
 ```
 
-### ?т. `mapMatrix :: (a -> b) -> Matrix a -> Matrix b`
+### 0.5т. `mapMatrix :: (a -> b) -> Matrix a -> Matrix b`
 
 Аналогично на `mapThrice`, но за матрици.
 
@@ -505,7 +505,7 @@ True False True
 True True False
 ```
 
-### ?т. `place :: Three -> Three -> a -> Matrix a -> Matrix a`
+### 1т. `place :: Three -> Three -> a -> Matrix a -> Matrix a`
 
 ```haskell
 > place i j x m
@@ -533,7 +533,7 @@ True True False
 7 8 9
 ```
 
-### ?т. `concatThriceWith :: String -> Thrice String -> String`
+### 1т. `concatThriceWith :: String -> Thrice String -> String`
 
 Слепете низовете от подадения `Thrice String`, като използвате подадения низ като разделител.
 
@@ -544,7 +544,7 @@ True True False
 "hi (my name is) what (my name is) who"
 ```
 
-### ?т. `concatMatrixWith :: String -> String -> Matrix String -> String`
+### 2т. `concatMatrixWith :: String -> String -> Matrix String -> String`
 
 ```haskell
 concatMatrixWith rowSep colSep m
@@ -560,11 +560,11 @@ concatMatrixWith rowSep colSep m
 "1^^^2^^^3__4^^^5^^^6__7^^^8^^^9"
 ```
 
-### ?т. `showMatrixComposition :: (a -> String) -> Matrix a -> String`
+### 1т. `showMatrixComposition :: (a -> String) -> Matrix a -> String`
 
 Преимплементирайте показване на матрици както за `showMatrix`, но използвайки новите функции за работа с матрици.
 
-## ?т. Бонус задачи
+## 8т. Бонус задачи
 
 Измислете тип
 
