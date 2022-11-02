@@ -43,6 +43,18 @@ type Thrice a = Three -> a
 
 Или по друг начин казано, `Thrice` е нещо(функция), което по даден индекс ни дава стойността която "седи" на този индекс.
 
+#### Пример за `Thrice`
+
+```haskell
+t :: Thrice Int
+t Zero = 10
+t One = 100
+t Two = 1000
+
+> t Zero + t Two - t One
+910
+```
+
 Това е еквивалентно на
 
 ```haskell
@@ -81,18 +93,6 @@ thrice x y z ix =
 ```haskell
 thriceToTriple :: Thrice a -> (a, a, a)
 thriceToTriple t = (t Zero, t One, t Two)
-```
-
-#### Пример за `Thrice`
-
-```haskell
-t :: Thrice Int
-t Zero = 10
-t One = 100
-t Two = 1000
-
-> t Zero + t Two - t One
-910
 ```
 
 ### `Matrix`
