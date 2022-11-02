@@ -62,7 +62,7 @@ _ _ _
 
 ## Задачи
 
-### ?т. `join :: Result -> Result -> Result`
+### 2т. `join :: Result -> Result -> Result`
 
 Имплемнетирайте операция които "слива" две `Result` стойности.
 
@@ -73,7 +73,7 @@ _ _ _
 
 <нарочно оставено празно, защото иначе ще ви реша задачата>
 
-### ?т. `checkThreeSpots :: Thrice Spot -> Result`
+### 1т. `checkThreeSpots :: Thrice Spot -> Result`
 
 Сметнете резултата за дадени три места.
 
@@ -88,7 +88,7 @@ HasEmpty
 Full
 ```
 
-### ?т. `winner :: Board -> Result`
+### 3т. `winner :: Board -> Result`
 
 Пресметнете кой печели по подадена дъска. `join` може да е полезна тук.
 
@@ -128,7 +128,7 @@ m =
 HasEmpty
 ```
 
-### ?т. `emptySpots :: Board -> [(Three, Three)]`
+### 4т. `emptySpots :: Board -> [(Three, Three)]`
 
 Върнете индексите на всичките празни места за дадената дъска.
 
