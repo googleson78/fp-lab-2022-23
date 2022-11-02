@@ -1,0 +1,5 @@
+# currently hlint wrongly detects TypeApplications as redundant in tests
+- ignore:
+    name: Unused LANGUAGE pragma
+- ignore:
+    name: Use const
