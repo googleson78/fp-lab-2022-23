@@ -123,6 +123,28 @@ newtype Matrix a = MkMatrix {getMatrix :: Thrice (Thrice a)}
 
 Например, ако искаме елемента на ред 2 и колонка 3 от матрицата `m`, можем да я извикаме по следния начин - `m One Two`.
 
+Един начин да си мислим за конструирането на `Matrix` е чрез въпроса
+"Като са ми дадени два индекса в матрица, каква стойнст искам да седи зад тези индекси?".
+
+Да си представим че искаме да изградим матрицата в която на индекс `i` `j` седи стойността `i ^ j`.
+Това можем да направим по следния начин:
+
+```haskell
+threeToInteger :: Three -> Integer
+threeToInteger Zero = 0
+threeToInteger One = 1
+threeToInteger Two = 2
+
+expIndicesMatrix :: Matrix Integer
+expIndicesMatrix =
+  MkMatrix $ \i j -> threeToInteger i ^ threeToInteger j
+
+> expIndicesMatrix
+1 0 0
+1 1 1
+1 2 4
+```
+
 Както с `thrice`, тук имаме функция, с която по-удобно да конструираме матрици:
 
 ```haskell
