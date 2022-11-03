@@ -115,9 +115,6 @@ safeDiv x y = Just (x `div` y)
 
 -- Maybe as "computation that can fail" Lists as "one of many"
 
--- addList :: [Integer] -> [Integer] -> [Integer]
--- addList = undefined
-
 -- EXERCISE
 -- Generate all the numbers in the ("mathematical range") [n, m] in a list (inclusive).
 -- EXAMPLES
