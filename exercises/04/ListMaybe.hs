@@ -4,34 +4,99 @@ import Prelude hiding (all, and, concat, drop, filter, length, map, null, produc
 
 -- TODO:
 -- ask about 08.12
--- game/server+client semantics for HOF
+-- -> maybe, poll
+
+-- g :: ((Int -> Int) -> Int) -> Bool
+-- g f = even (f (\x -> x * 10))
 --
+-- y :: Bool
+-- y = g (\h -> h 20)
+
+-- g f = ... f <> ...
+--
+-- Пешо вика g и дава f
+-- Гошо имплементира g и вика f
+--
+--
+--
+-- g :: Int -> (Bool -> (String -> Char))
+-- g :: (Int -> Int) -> Bool -> String -> Char
+
+--
+--
+--
+-- f :: (Int -> Int) -> Int -> Bool
+-- Int
+--
+-- (Int -> Int)
+--
+-- h :: ((Int -> Int) -> Int) -> Int -> Bool
+
+-- game/server+client semantics for HOF
+-- quad x = double $ double x
+
+-- (.) :: (b -> c) -> (a -> b) -> (a -> c)
+-- compose :: (b -> c) -> (a -> b) -> a -> c
+-- compose f g x = f (g x)
+
+double :: Int -> Int
+double x = x * x
+
+-- 3  -> 5 -> 6 -> nil
+-- 4 ----^
+--
+-- [3,5,6]
+-- [4,5,6]
+
+-- data List a
+--  = Nil -- []
+--  | Cons a (List a) -- (:)
+
+-- sumList :: [Integer] -> Integer
+-- sumList [] = 0
+-- sumList (x : xs) = x + sumList xs
+
+-- dog dogs
+-- x   xs
+
+-- sumList ((:) x xs) = x + sumList xs
+
 -- ($), (.) (example quad?)
 --
--- read prs!
---
---
--- don't delay till last day:
---   * probably I won't reply very fast if it's a work day
---   * you probably won't have the time to amend things
---
--- github don't push to main, make pull requests
---
--- hw2
--- say that current homework is somewhat required for the next
--- maybe also launch hw3 earlier than end of hw2
-
 -- lists:
 --   * constructor name
 --   * list range
 --   * list comprehension
 --   * String
+--      * utf8 -> Text
+--      * byte array -> ByteString
 --   * (optional) "nondeterminism effect"
+
+-- matrix :: (....)
+-- f -> (...)
 
 -- maybe:
 --   * like pointers kind of
 --   * used for error handling and propagation
 --   * (optional) "failure effect"
+
+-- data Maybe a
+--  = Nothing -- null
+--  | Just a -- ...
+
+-- addMaybes ::
+--  Maybe Integer ->
+--  Maybe Integer ->
+--  Maybe Integer
+-- addMaybes (Just x) (Just y) = Just (x + y)
+-- addMaybes _ _ = Nothing
+
+safeDiv ::
+  Integer ->
+  Integer ->
+  Maybe Integer
+safeDiv x 0 = Nothing
+safeDiv x y = Just (x `div` y)
 
 -- safeDiv
 
@@ -42,12 +107,16 @@ import Prelude hiding (all, and, concat, drop, filter, length, map, null, produc
 
 -- headMaybe
 
+-- headMaybe :: [a] -> Maybe a
+-- headMaybe [] = Nothing
+-- headMaybe (x : _) = Just x
+
 -- cartesianProd with list comprehension?
 
 -- Maybe as "computation that can fail" Lists as "one of many"
 
-addList :: [Integer] -> [Integer] -> [Integer]
-addList = undefined
+-- addList :: [Integer] -> [Integer] -> [Integer]
+-- addList = undefined
 
 -- EXERCISE
 -- Generate all the numbers in the ("mathematical range") [n, m] in a list (inclusive).
