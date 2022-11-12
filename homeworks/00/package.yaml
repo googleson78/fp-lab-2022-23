@@ -4,8 +4,10 @@ version:             0.1.0.0
 ghc-options:
 - -Wall
 - -Werror
-- -Wincomplete-uni-patterns
 - -Widentities
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wpartial-fields
 - -Wredundant-constraints
 
 extra-source-files:
