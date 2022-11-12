@@ -40,6 +40,8 @@ flags:
     default: false
 
 
+# TODO
+# reconsider CPP usage
 when:
 - condition: flag(can)
   cpp-options: -DCAN
