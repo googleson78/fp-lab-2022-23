@@ -4,6 +4,11 @@ module BooleanBlindness where
 
 import Text.Printf (printf)
 
+-- TODO: don't do this together with folds, takes too much time
+-- "boolean blindness" - prefer returning Maybe/"a proof", instead of a Bool and doing an if :
+-- https://runtimeverification.com/blog/code-smell-boolean-blindness/
+-- https://existentialtype.wordpress.com/2011/03/15/boolean-blindness/
+
 digitsToNumber :: [Integer] -> Integer
 digitsToNumber = go . reverse
   where

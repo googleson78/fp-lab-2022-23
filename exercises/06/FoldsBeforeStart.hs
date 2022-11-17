@@ -14,12 +14,10 @@ module Folds where
 
 import Prelude hiding (all, and, concat, drop, filter, foldr, length, map, null, or, product, reverse, subtract, sum, take, zip, zipWith, (++))
 
--- mention hoogle
-
--- "boolean blindness" - prefer returning Maybe/"a proof", instead of a Bool and doing an if :
--- https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/
--- https://runtimeverification.com/blog/code-smell-boolean-blindness/
--- https://existentialtype.wordpress.com/2011/03/15/boolean-blindness/
+-- talk about
+-- abstracting
+-- "automating recursion"
+-- "replacing constructors"
 
 -- fold
 -- catamorphism
