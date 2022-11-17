@@ -24,25 +24,112 @@ import Prelude hiding (all, and, concat, drop, filter, foldr, length, map, null,
 -- fold
 -- catamorphism
 
-data Nat
-  = Zero
-  | Suc Nat
-  deriving (Show)
-
 integerToNat :: Integer -> Nat
 integerToNat 0 = Zero
 integerToNat n = Suc $ integerToNat $ n - 1
 
 -- show how we reached map
--- squareList
--- megaPair
+squareList :: [Integer] -> [Integer]
+squareList [] = []
+squareList (x : xs) = f x : squareList xs
+  where
+    f x = x * x
 
--- do some reductions?
+megaPair :: a -> [b] -> [(a, b)]
+megaPair _ [] = []
+megaPair x (y : ys) = f y : megaPair x ys
+  where
+    f z = (x, z)
+
+-- map :: (a -> b) -> [a] -> [b]
+-- map _ [] = []
+-- map f (x : xs) = f x : map f xs
+
+data Nat
+  = Zero
+  | Suc Nat
+  deriving (Show)
+
+addNat :: Nat -> Nat -> Nat
+addNat Zero m = nv
+  where
+    nv = m
+addNat (Suc n) m = f $ addNat n m
+  where
+    f = Suc
+
+multNat :: Nat -> Nat -> Nat
+multNat Zero m = nv
+  where
+    nv = Zero
+multNat (Suc n) m = f $ multNat n m
+  where
+    f = addNat m
+
+foldNat :: (a -> a) -> a -> Nat -> a
+foldNat _ nv Zero = nv
+foldNat f nv (Suc n) = f $ foldNat f nv n
+
+-- foldNat nv f (Suc (Suc (Suc Zero)))
+-- f (foldNat nv f (Suc (Suc Zero)))
+-- f (f (foldNat nv f (Suc Zero))
+-- f (f (f (foldNat nv f Zero)))
+--
+--
+-- Suc (Suc (Suc Zero))
+-- f   (f   (f   nv))
+--
+
+-- addNat' :: Nat -> Nat -> Nat
+-- addNat' n m = foldNat m Suc n
 
 -- show how we abstract
 -- addNat multNat
 
 -- do some reductions?
+
+sum :: [Integer] -> Integer
+sum [] = nv
+  where
+    nv = 0
+sum (x : xs) = op x (sum xs)
+  where
+    op = (+)
+
+product :: [Integer] -> Integer
+product [] = nv
+  where
+    nv = 1
+product (x : xs) = op x (product xs)
+  where
+    op = (*)
+
+append :: [a] -> [a] -> [a]
+append [] ys = nv
+  where
+    nv = ys
+append (x : xs) ys = op x (append xs ys)
+  where
+    op = (:)
+
+-- nv :: a
+-- op :: (a -> a -> a)
+foldr :: (a -> b -> b) -> b -> [a] -> b
+foldr op nv [] = nv
+foldr op nv (x : xs) = op x (foldr op nv xs)
+
+-- foldr (+) 0 [x, y, z]
+-- foldr (+) 0 (x : (y : (z : [])))
+-- x + (foldr (+) 0 (y : (z : [])))
+-- x + y + (foldr (+) 0 (z : []))
+-- x + (y + (z + foldr (+) 0 []))
+--
+-- x :    (y :    (z :    []))
+-- (x `op` (y `op` (z `op` nv)))
+-- (((nv `op` x) `op` y) `op` z)
+
+append' :: [a] -> [a] -> [a]
+append' xs ys = foldr (:) ys xs
 
 -- reach foldr
 -- sum, product, append
