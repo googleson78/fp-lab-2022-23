@@ -331,7 +331,6 @@ cartesian = undefined
 -- We can generalise cartesian to work with arbitrary functions instead of just (,),
 -- taking elements "each with each"
 -- This is also the generalisation of cartesian, as seen in the examples.
--- NOTE: this was an exercise in week 3, but I've shown it live in week 4, so you can just ignore it.
 -- EXAMPLES
 -- >>> lift2List (+) [1] [2]
 -- [3]
