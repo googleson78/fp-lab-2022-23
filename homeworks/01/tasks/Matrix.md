@@ -12,6 +12,8 @@
 
 Опитайте се да имплементирате всичко тук **без** да използвате списъци.
 
+TODO: more examples???
+
 ### `Three`
 
 ```haskell
@@ -100,6 +102,7 @@ thrice x y z ix =
     Two -> z
 ```
 
+TODO: give example for Matrix - people think you can only use thrice/matrix
 ### `Matrix`
 
 ```haskell
