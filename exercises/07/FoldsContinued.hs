@@ -17,22 +17,76 @@ import Prelude hiding (all, and, concat, drop, filter, foldl, foldr, length, map
 -- let me resolve comments and close prs pls :)
 
 -- talk about boolean blindness example from homework
+
 -- fromMaybe :: Spot -> Marker
 -- fromMaybe (Just value) = value
+--
 -- fromMaybe Nothing = X
 --
+--
 -- checkThreeSpots :: Thrice Spot -> Result
+-- checkThreeSpots t =
+--   case (t Zero, t One, t Two) of
+--      (Just x, Just y, Just z)
+--        | x == y, y == z -> Wins x
+--      ...
 -- checkThreeSpots x
 --     | x Zero == Nothing || x One == Nothing || x Two == Nothing = HasEmpty
---     | x Zero == x One && x One == x Two && x Two == x Zero = Wins (fromMaybe (x Zero))
+--     | x Zero == x One,
+--       x One == x Two,
+--       x Two == x Zero
+--          = Wins (fromMaybe (x Zero))
 --     | otherwise = Full
 
+--
 -- foldr as "abstracting recursion"
+--
 
--- TODO:
--- explain why foldl
--- minusFrom :: Integer -> [Integer] -> Integer
+-- minusFrom 5 [1,2,3]
+-- foldr (-) 5 [1,2,3]
+-- (:) 1 ((:) 2 ((:) 3 []))
+-- (-) 1 ((-) 2 ((-) 3 5))
+-- 1 - (2 - (3 - 5))
+
+lastMaybe' :: [a] -> Maybe a
+lastMaybe' [] = Nothing
+lastMaybe' [x] = Just x
+lastMaybe' (_ : xs) = lastMaybe' xs
+
+-- >>> lastMaybe []
+-- >>> lastMaybe [1]
+-- >>> lastMaybe [1,2,3]
 -- lastMaybe :: [a] -> Maybe a
+-- lastMaybe = foldr (\x rec -> rec) Nothing
+
+-- lastMaybe :: [a] -> Maybe a
+minusFrom :: Integer -> [Integer] -> Integer
+minusFrom m [] = m
+minusFrom m (n : ns) =
+  minusFrom (m - n) ns
+
+sumImper :: [Integer] -> Integer
+sumImper = go 0
+  where
+    go acc [] = acc
+    go acc (n : ns) = go (n + acc) ns
+
+foldl :: (b -> a -> b) -> b -> [a] -> b
+foldl _ acc [] = acc
+foldl op acc (x : xs) = foldl op (op acc x) xs
+
+sumImper' = foldl (+) 0
+
+-- foldl (+) 0 [1,2,3] ->
+-- foldl (+) ((+) 0 1) [2,3] ->
+-- foldl (+) ((+) ((+) 0 1) 2) [3] ->
+-- foldl (+) ((+) ((+) ((+) 0 1) 2) 3) [] ->
+-- ((+) ((+) ((+) 0 1) 2) 3) ->
+-- ((0 + 1) + 2) + 3
+
+-- 1 + (2 + (3 + 0))
+-- foldr (+) 0 [1,2,3] ->
+-- (+) 1 ((+) 2 ((+) 3 0))
 
 -- write foldl
 -- foldl = undefined
@@ -43,8 +97,23 @@ foldr :: (a -> b -> b) -> b -> [a] -> b
 foldr _ v [] = v
 foldr f v (x : xs) = f x $ foldr f v xs
 
+-- foldr (\x rec -> _)
+-- foldl (\acc x -> _)
+--
+-- foldr :: (a -> b -> b)
+-- foldl :: (b -> a -> b)
+--
 -- mention "mnemonic" for order of function args on foldr and foldl
 -- mention "mnemonics" for function args
+
+--
+-- (+) is assoc -> foldl == foldr
+--
+
+-- ((0 + 1) + 2) + 3
+
+-- 1 + (2 + (3 + 0))
+--
 
 -- sum - both foldl and foldr? why?
 -- ditto concat
