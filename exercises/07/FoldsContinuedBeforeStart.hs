@@ -65,6 +65,7 @@ foldNat f v (Suc n) = f (foldNat f v n)
 addNat' :: Nat -> Nat -> Nat
 addNat' n m = foldNat Suc m n
 
+-- TODO: add back multnat because it's necessary for multnat
 -- EXERCISE
 -- Implement natToInteger using foldNat.
 -- EXAMPLES

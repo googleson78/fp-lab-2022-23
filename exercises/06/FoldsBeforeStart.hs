@@ -39,6 +39,7 @@ integerToNat n = Suc $ integerToNat $ n - 1
 
 -- show how we abstract
 -- addNat multNat
+-- multNat necessary for expNat!!!
 
 -- do some reductions?
 
