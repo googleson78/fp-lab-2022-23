@@ -33,7 +33,7 @@ squareList :: [Integer] -> [Integer]
 squareList [] = []
 squareList (x : xs) = f x : squareList xs
   where
-    f x = x * x
+    f y = y * y
 
 megaPair :: a -> [b] -> [(a, b)]
 megaPair _ [] = []
@@ -59,7 +59,7 @@ addNat (Suc n) m = f $ addNat n m
     f = Suc
 
 multNat :: Nat -> Nat -> Nat
-multNat Zero m = nv
+multNat Zero _ = nv
   where
     nv = Zero
 multNat (Suc n) m = f $ multNat n m
@@ -115,7 +115,7 @@ append (x : xs) ys = op x (append xs ys)
 -- nv :: a
 -- op :: (a -> a -> a)
 foldr :: (a -> b -> b) -> b -> [a] -> b
-foldr op nv [] = nv
+foldr _ nv [] = nv
 foldr op nv (x : xs) = op x (foldr op nv xs)
 
 -- foldr (+) 0 [x, y, z]
