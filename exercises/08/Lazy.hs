@@ -12,7 +12,7 @@
 module Lazy where
 
 import Debug.Trace
-import Prelude hiding (foldl, repeat, scanl, take)
+import Prelude hiding (foldl, repeat, scanl)
 
 -- hof: https://www.tweag.io/blog/2022-12-01-higherorderness-is-interaction/
 
@@ -69,11 +69,11 @@ foldl :: (b -> a -> b) -> b -> [a] -> b
 foldl _ acc [] = acc
 foldl f acc (x : xs) = foldl f (f acc x) xs
 
-bla :: [Nat] -> Nat
-bla = foldl addNat Zero
-
-ones :: [Nat]
-ones = Suc Zero : ones
+--bla :: [Nat] -> Nat
+--bla = foldl addNat Zero
+--
+--ones :: [Nat]
+--ones = Suc Zero : ones
 
 -- seq :: a -> b -> b
 -- seq x y
