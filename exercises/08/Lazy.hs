@@ -11,28 +11,99 @@
 
 module Lazy where
 
-import Prelude hiding (foldl, repeat, scanl)
+import Debug.Trace
+import Prelude hiding (foldl, repeat, scanl, take)
 
 -- hof: https://www.tweag.io/blog/2022-12-01-higherorderness-is-interaction/
 
+-- f(1,2,3)
+
+-- > x = 3 + 5
+-- > y = 4 + x
+-- > z = y == 3
+-- z
+-- False
+
+-- f (2 + 3) (4 + 5) (6 + 7)
+
 -- thunk -- delayed computation, replaced when done
 -- :print, :sprint -- don't forget type annos -- sometimes unreliable, different results between ghc versions
+
+data Nat = Zero | Suc Nat
+  deriving (Show)
+
+-- evaluate to WHNF
+-- weak head normal form
+isZero :: Nat -> Bool
+isZero Zero = True
+isZero (Suc _) = False
+
+-- x :: Nat
+-- x = Zero
+--
+-- y :: Nat
+-- y = Suc (Suc Zero)
+
 -- Nat, isZero, some tuple stuff?
 
 -- when do we "need" to evalute something? case matches!
 -- how much do we need to evaluate it? WHNF
 
 -- infinite structures
+
+-- data Stream a = Cons a (Stream a)
+
 -- Stream, but we will use [] with asserts*
 -- show take def?
 
--- Debug.Trace
+-- take :: Int -> [a] -> [a]
+-- take 0 _ = []
+-- take _ [] = []
+-- take n (x : xs) = x : take (n - 1) xs
+
+addNat :: Nat -> Nat -> Nat
+addNat Zero m = m
+addNat (Suc n) m = Suc $ addNat n m
+
+foldl :: (b -> a -> b) -> b -> [a] -> b
+foldl _ acc [] = acc
+foldl f acc (x : xs) = foldl f (f acc x) xs
+
+bla :: [Nat] -> Nat
+bla = foldl addNat Zero
+
+ones :: [Nat]
+ones = Suc Zero : ones
+
+-- seq :: a -> b -> b
+-- seq x y
+-- (seq x 5)
+-- https://stackoverflow.com/a/66965677
+
+foldl' :: (b -> a -> b) -> b -> [a] -> b
+foldl' _ acc [] = acc
+foldl' f acc (x : xs) =
+  seq (f acc x) (foldl' f (f acc x) xs)
+
+-- WHNF
+
+boo :: [(Int, Int)] -> (Int, Int)
+boo = foldl' go (0, 0)
+  where
+    go (accx, accy) (x, y) =
+      (accx + x, accy + y)
+
+-- (<голяма сметка>, <голяма сметка2>)
+-- deepseq
+
+-- foldl - не
+-- import Data.List (foldl')
+-- foldl' - да
 
 -- foldr, foldl, stack space
 -- seq a b - "evaluate a and b together" - no enforced order, but usually used to mean a before b
 --  seq a b terminates iff a terminates
 -- very detailed SO answer describing seq in more detail:
--- https://stackoverflow.com/a/66965677
 -- A note on evaluation order: the expression seq a b does not guarantee that a will be evaluated before b.
 -- The only guarantee given by seq is that the both a and b will be evaluated before seq returns a value.
 -- In particular, this means that b may be evaluated before a.
