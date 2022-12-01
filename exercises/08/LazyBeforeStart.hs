@@ -13,6 +13,7 @@ module Lazy where
 
 import Prelude hiding (foldl, repeat, scanl)
 
+-- TODO: rework/prepare better????
 -- thunk -- delayed computation, replaced when done
 -- :print, :sprint -- don't forget type annos -- sometimes unreliable, different results between ghc versions
 -- Nat, isZero, some tuple stuff?
