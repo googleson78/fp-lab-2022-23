@@ -87,7 +87,7 @@ facts = undefined
 -- These are called "scans" in the Haskell standard library.
 -- EXAMPLES
 -- >>> scanl (+) 0 [1..10]
--- [1,3,6,10,15,21,28,36,45,55,55]
+-- [0,1,3,6,10,15,21,28,36,45,55]
 scanl :: (b -> a -> b) -> b -> [a] -> [b]
 scanl = undefined
 
@@ -95,7 +95,7 @@ scanl = undefined
 -- Use scanl to implement facts.
 -- EXAMPLES
 -- >>> take 10 factsScanl
--- [1,2,6,24,120,720,5040,40320,362880,3628800]
+-- [1,1,2,6,24,120,720,5040,40320,362880,3628800]
 factsScanl :: [Integer]
 factsScanl = undefined
 
