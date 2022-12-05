@@ -102,14 +102,14 @@ factsScanl = undefined
 -- EXERCISE
 -- Implement a list of all the fibonacci numbers.
 -- Use the following idea:
--- The fibonacci numbers start with 1 1
+-- The fibonacci numbers start with 0 1
 -- To generate the next fibonacci number, we need to sum the previous two, so assuming we already have
 -- fibs :: [Integer]
 -- that would mean summing the head of fibs with the head of the tail of fibs
 -- zipWith will be useful here.
 -- EXAMPLES
 -- >>> take 10 fibs
--- [1,1,2,3,5,8,13,21,34,55]
+-- [0,1,1,2,3,5,8,13,21,34]
 fibs :: [Integer]
 fibs = undefined
 
