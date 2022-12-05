@@ -11,7 +11,7 @@
 
 module Lazy where
 
-import Prelude hiding (foldl, repeat, scanl)
+import Prelude hiding (cycle, foldl, repeat, scanl)
 
 -- TODO: rework/prepare better????
 -- thunk -- delayed computation, replaced when done
