@@ -15,6 +15,9 @@ extra-source-files:
 
 dependencies:
 - base >= 4.7 && < 5
+- homework01
+
+language: Haskell2010
 
 library:
   source-dirs: src
@@ -29,7 +32,6 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - homework02
-    - threepenny-gui
 
 tests:
   homework01-test:
