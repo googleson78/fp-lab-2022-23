@@ -128,12 +128,10 @@ newtype All = MkAll {getAll :: Bool}
 -- mtimes 5 x is intuitively supposed to be the same as 5 * x,
 -- in other words, x <> x <> x <> x <> x
 -- EXAMPLES
--- >>> mtimes (Suc $ Suc Zero) $ Suc $ Suc $ Suc Zero
--- Suc (Suc (Suc (Suc (Suc (Suc Zero)))))
 -- >>> mtimes (Suc $ Suc Zero) $ [1,2,3]
 -- [1,2,3,1,2,3]
--- >>> mtimes (Suc $ Suc Zero) $ Add 21
--- Add 42
+-- >>> mtimes (Suc $ Suc Zero) $ Suc $ Suc $ Suc Zero
+-- Suc (Suc (Suc (Suc (Suc (Suc Zero)))))
 mtimes :: Monoid a => Nat -> a -> a
 mtimes = undefined
 
