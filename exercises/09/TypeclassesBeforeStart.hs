@@ -140,8 +140,6 @@ mtimes = undefined
 -- EXAMPLES
 -- >>> fold [Zero, Suc Zero, Suc (Suc Zero)]
 -- Suc (Suc (Suc Zero))
--- >>> fold $ map Add [1..10]
--- Add 55
 -- >>> fold $ [[1,2,3],[4,5,6],[7,8,9]]
 -- [1,2,3,4,5,6,7,8,9]
 fold :: Monoid a => [a] -> a
@@ -150,10 +148,6 @@ fold = undefined
 -- EXERCISE
 -- "Fold" a Maybe using a monoid and a mapping function.
 -- This is useful when you want to default a Nothing to some monoid.
--- >>> foldMapMaybe Add $ Just 3
--- Add 3
--- >>> foldMapMaybe Add Nothing
--- Add 0
 -- >>> foldMapMaybe (:[]) $ Just 'a'
 -- "a"
 -- >>> foldMapMaybe (:[]) Nothing
@@ -167,8 +161,6 @@ foldMapMaybe = undefined
 -- ** Extremely** useful function.
 
 -- EXAMPLES
--- >>> foldMap Add [1..10]
--- Add 55
 foldMap :: Monoid b => (a -> b) -> [a] -> b
 foldMap = undefined
 
