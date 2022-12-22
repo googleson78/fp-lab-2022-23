@@ -104,7 +104,7 @@ data Nat = Zero | Suc Nat
 -- Implement a monoid instance for the Any type, with the following semantics:
 --
 -- When combining things via (<>), we want to see if any of the arguments are True
-newtype Any = Any Bool
+newtype Any = MkAny {getAny :: Bool}
 
 -- instance Semigroup Any where
 -- instance Monoid Any where
@@ -113,7 +113,7 @@ newtype Any = Any Bool
 -- Implement a monoid instance for the All type, with the following semantics:
 --
 -- When combining things via (<>), we want to see if all of the arguments are True
-newtype All = All Bool
+newtype All = MkAll {getAll :: Bool}
 
 -- instance Semigroup All where
 -- instance Monoid All where
@@ -192,7 +192,7 @@ any = undefined
 -- Maybe can also be made into a monoid by always "taking the first Just", i.e. when combining elements,
 -- we ignore all the Nothings, and if we ever find a Just on the left, we always return that
 -- Implement this instance
-newtype First a = First (Maybe a)
+newtype First a = MkFirst {getFirst :: Maybe a}
 
 -- instance Semigroup (First a) where
 -- instance Monoid (First a) where
@@ -209,7 +209,7 @@ find = undefined
 -- Dual [4,5,6,1,2,3]
 -- >>> Dual (First (Just 5)) <> Dual (First (Just 8))
 -- Dual (First (Just 8))
-newtype Dual a = Dual a
+newtype Dual a = MkDual {getDual :: a}
 
 -- Implement Semigroup and Monoid for Dual
 
@@ -280,10 +280,7 @@ findFirstAndLast = undefined
 -- EXERCISE
 -- Functions with the same domain and codomain form a monoid.
 -- Implement it.
-newtype Endo a = Endo (a -> a)
-
-getEndo :: Endo a -> a -> a
-getEndo (Endo f) = f
+newtype Endo a = MkEndo {getEndo :: a -> a}
 
 -- EXAMPLES
 -- >>> getEndo (foldMap Endo [succ, succ, (*2), succ]) 5
