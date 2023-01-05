@@ -1,0 +1,351 @@
+-- cover all cases!
+{-# OPTIONS_GHC -fwarn-incomplete-patterns #-}
+-- warn about incomplete patterns v2
+{-# OPTIONS_GHC -fwarn-incomplete-uni-patterns #-}
+-- write all your toplevel signatures!
+{-# OPTIONS_GHC -fwarn-missing-signatures #-}
+-- use different names!
+{-# OPTIONS_GHC -fwarn-name-shadowing #-}
+-- use all your pattern matches!
+{-# OPTIONS_GHC -fwarn-unused-matches #-}
+
+module Typeclasses where
+
+import Prelude hiding (Monoid (..), Semigroup (..), all, any, find, fold, foldMap, lookup, mconcat, mtimes, reverse)
+
+class Semigroup a where
+  (<>) :: a -> a -> a
+
+class Semigroup a => Monoid a where
+  mempty :: a
+
+-- EXERCISE
+-- implement (<=) using compare
+-- EXAMPLES
+-- >>> leq 3 5
+-- True
+-- >>> leq 5 5
+-- True
+-- >>> leq 6 5
+-- False
+leq :: Ord a => a -> a -> Bool
+leq x y = compare x y /= GT
+
+-- EXERCISE
+-- Implement compare using <=
+-- EXAMPLES
+-- >>> compare' 3 5
+-- LT
+-- >>> compare' 5 5
+-- EQ
+-- >>> compare' True False
+-- GT
+-- >>> compare' 'a' 'b'
+-- LT
+compare' :: Ord a => a -> a -> Ordering
+compare' x y
+  | x <= y = if y <= x then EQ else LT
+  | otherwise = GT
+
+-- Given a function to convert a values, compare them using the ordering in b
+-- This function is useful partially applied, when we have.
+-- sortBy :: (a -> a -> Ordering) -> [a] -> [a]
+-- >>> comparing fst (5, 0) (4, 69)
+-- >>> comparing snd (5, 0) (4, 69)
+-- GT
+-- LT
+comparing :: Ord b => (a -> b) -> a -> a -> Ordering
+comparing f x y = compare (f x) (f y)
+
+data Nat = Zero | Suc Nat
+  deriving (Show)
+
+-- EXERCISE
+-- Implement a Monoid instance for Nat based on addition
+instance Semigroup Nat where
+  Zero <> m = m
+  Suc n <> m = Suc $ n <> m
+
+instance Monoid Nat where
+  mempty = Zero
+
+-- EXERCISE
+-- Implement a Monoid instance for [a]
+-- Note how regardless of what a is, [a] is always a Monoid.
+-- This is similar to what is usually called a "free" structure in mathematics.
+-- And indeed, lists are "the free Monoid"
+instance Semigroup [a] where
+  (<>) = (++)
+
+instance Monoid [a] where
+  mempty = []
+
+-- EXERCISE
+-- Implement a monoid instance for the Any type, with the following semantics:
+--
+-- When combining things via (<>), we want to see if any of the arguments are True
+newtype Any = Any Bool
+
+instance Semigroup Any where
+  Any b1 <> Any b2 = Any $ b1 || b2
+
+instance Monoid Any where
+  mempty = Any False
+
+-- EXERCISE
+-- Implement a monoid instance for the All type, with the following semantics:
+--
+-- When combining things via (<>), we want to see if all of the arguments are True
+newtype All = All Bool
+
+instance Semigroup All where
+  All b1 <> All b2 = All $ b1 && b2
+
+instance Monoid All where
+  mempty = All True
+
+-- EXERCISE
+-- We can lift monoids over tuples by doing the monoidal operation component-wise. Implement the instance
+instance (Semigroup a, Semigroup b) => Semigroup (a, b) where
+  (x1, y1) <> (x2, y2) = (x1 <> x2, y1 <> y2)
+
+instance (Monoid a, Monoid b) => Monoid (a, b) where
+  mempty = (mempty, mempty)
+
+-- EXERCISE
+-- "Monoid multiplication"
+-- mtimes 5 x is intuitively supposed to be the same as 5 * x,
+-- in other words, x <> x <> x <> x <> x
+-- EXAMPLES
+-- >>> mtimes (Suc $ Suc Zero) $ Suc $ Suc $ Suc Zero
+-- Suc (Suc (Suc (Suc (Suc (Suc Zero)))))
+-- >>> mtimes (Suc $ Suc Zero) $ [1,2,3]
+-- [1,2,3,1,2,3]
+-- >>> mtimes (Suc $ Suc Zero) $ Add 21
+-- Add 42
+mtimes :: Monoid a => Nat -> a -> a
+mtimes Zero _ = mempty
+mtimes (Suc n) x = x <> mtimes n x
+
+-- EXERCISE
+-- Combine a list of elements, assuming that the type in the list is a Monoid
+-- EXAMPLES
+-- >>> fold [Zero, Suc Zero, Suc (Suc Zero)]
+-- Suc (Suc (Suc Zero))
+-- >>> fold $ map Add [1..10]
+-- Add 55
+-- >>> fold $ [[1,2,3],[4,5,6],[7,8,9]]
+-- [1,2,3,4,5,6,7,8,9]
+fold :: Monoid a => [a] -> a
+fold = foldr (<>) mempty
+
+-- EXERCISE
+-- "Fold" a Maybe using a monoid and a mapping function.
+-- This is useful when you want to default a Nothing to some monoid.
+-- >>> foldMapMaybe Add $ Just 3
+-- Add 3
+-- >>> foldMapMaybe Add Nothing
+-- Add 0
+-- >>> foldMapMaybe (:[]) $ Just 'a'
+-- "a"
+-- >>> foldMapMaybe (:[]) Nothing
+-- []
+foldMapMaybe :: Monoid b => (a -> b) -> Maybe a -> b
+foldMapMaybe _ Nothing = mempty
+foldMapMaybe f (Just x) = f x
+
+-- EXERCISE
+-- Fold a list using a mapping function. Try implementing this with foldr.
+
+-- ** Extremely** useful function.
+
+-- EXAMPLES
+-- >>> foldMap Add [1..10]
+-- Add 55
+foldMap :: Monoid b => (a -> b) -> [a] -> b
+foldMap f = fold . map f
+
+-- EXERCISE
+-- Implement all using the All monoid and foldMap
+all :: (a -> Bool) -> [a] -> Bool
+all p = getAll . foldMap (All . p)
+
+getAll :: All -> Bool
+getAll (All b) = b
+
+-- EXERCISE
+-- Implement any using the Any monoid and foldMap
+any :: (a -> Bool) -> [a] -> Bool
+any p = getAny . foldMap (Any . p)
+
+getAny :: Any -> Bool
+getAny (Any b) = b
+
+-- EXERCISE
+-- Maybe lifts any Semigroup into a Monoid by adding an extra element(Nothing) to be the mempty.
+-- Implement the instance that witnesses this
+
+instance Semigroup a => Semigroup (Maybe a) where
+  Just x <> Just y = Just $ x <> y
+  _ <> _ = Nothing
+
+instance Semigroup a => Monoid (Maybe a) where
+  mempty = Nothing
+
+-- EXERCISE
+-- Maybe can also be made into a monoid by always "taking the first Just", i.e. when combining elements,
+-- we ignore all the Nothings, and if we ever find a Just on the left, we always return that
+-- Implement this instance
+newtype First a = First (Maybe a)
+
+instance Semigroup (First a) where
+  First Nothing <> x = x
+  First (Just x) <> _ = First $ Just x
+
+instance Monoid (First a) where
+  mempty = First Nothing
+
+boolToMaybe :: (a -> Bool) -> a -> Maybe a
+boolToMaybe p x = if p x then Just x else Nothing
+
+-- EXERCISE
+-- Now implement the find function by using First and foldMap
+find :: (a -> Bool) -> [a] -> Maybe a
+find p = getFirst . foldMap (First . boolToMaybe p)
+
+getFirst :: First a -> Maybe a
+getFirst (First x) = x
+
+-- EXERCISE
+-- If we have a Monoid for an a, we can make another monoid, by simply flipping the operation, i.e.
+-- For example, we want something like this:
+-- >>> Dual [1,2,3] <> Dual [4,5,6]
+-- Dual [4,5,6,1,2,3]
+-- >>> Dual (First (Just 5)) <> Dual (First (Just 8))
+-- Dual (First (Just 8))
+newtype Dual a = Dual a
+
+-- Implement Semigroup and Monoid for Dual
+
+instance Semigroup a => Semigroup (Dual a) where
+  Dual x <> Dual y = Dual $ y <> x
+
+instance Monoid a => Monoid (Dual a) where
+  mempty = Dual mempty
+
+-- EXERCISE
+-- Now use Dual and foldMap to implement reverse
+reverse :: [a] -> [a]
+reverse = getDual . foldMap (Dual . (: []))
+
+getDual :: Dual a -> a
+getDual (Dual x) = x
+
+-- EXERCISE
+-- Now use First, foldMap, the monoid for tuples and Dual to implement a function which works like find
+-- but instead returns the first and the last element matching a predicate
+--
+-- EXAMPLES
+-- >>> findFirstLast (==1) [(1, "Pirin"), (2, "nice"), (1, "GY!BE")]
+-- (Just "Pirin",Just "GY!BE")
+--
+-- >>> findFirstLast (==1) [(1, "BoJack"), (2, "nice"), (1, "GY!BE"), (1, "Horseman"), (3, "hehe")]
+-- (Just "BoJack",Just "Horseman")
+findFirstAndLast :: (a -> Bool) -> [a] -> Maybe (a, a)
+findFirstAndLast p =
+  bisequence
+    . bimap getFirst (getFirst . getDual)
+    . foldMap (\x -> let sat = boolToMaybe p x in (First sat, Dual (First sat)))
+
+bisequence :: (Maybe a, Maybe b) -> Maybe (a, b)
+bisequence (Just x, Just y) = Just (x, y)
+bisequence _ = Nothing
+
+bimap :: (a -> c) -> (b -> d) -> (a, b) -> (c, d)
+bimap f g (x, y) = (f x, g y)
+
+-- EXERCISE
+-- Given a list of key-value pairs, update the value for a given key, or if it doesn't exist
+-- insert it with a default value. This is what the Maybe b is for - so that the caller
+-- can supply a modifying function and a default value at the same time.
+-- Think about what the constraint is you will require.
+-- Is there a reason to use any other constraint?
+-- EXAMPLES
+-- we can put function definitions on one line if we separate the clauses with a ;
+-- >>> let f Nothing = 5; f (Just x) = x * 5
+-- >>> upsert f "pesho" []
+-- [("pesho",5)]
+-- >>> upsert f "pesho" [("gosho", 42)]
+-- [("gosho",42),("pesho",5)]
+-- >>> upsert f "pesho" [("gosho", 42), ("pesho", 84)]
+-- [("gosho",42),("pesho",420)]
+upsert :: Eq a => (Maybe b -> b) -> a -> [(a, b)] -> [(a, b)]
+upsert f k [] = [(k, f Nothing)]
+upsert f k (x@(kx, ky) : xs)
+  | kx == k = (k, f (Just ky)) : xs
+  | otherwise = x : upsert f k xs
+
+-- EXERCISE
+-- For a given list, return a key-value list with the keys being the original elements,
+-- and the values being how many times each element was present in the original list. (aka a histogram)
+-- Think about what the minimal constraint is you will require.
+-- EXAMPLES
+-- >>> histo [1,2,3]
+-- [(3,1),(2,1),(1,1)]
+-- >>> histo "How much wood could a wood chuck chuck if a wood chuck could chuck wood?"
+-- [('?',1),('d',6),('o',10),('w',5),(' ',14),('k',4),('c',11),('u',8),('h',5),('l',3),('a',2),('f',1),('i',1),('m',1),('H',1)]
+histo :: Eq a => [a] -> [(a, Integer)]
+histo = foldr go []
+  where
+    go = upsert upsertHisto
+    upsertHisto Nothing = 1
+    upsertHisto (Just x) = succ x
+
+-- EXERCISE
+-- Insert a value into an ordered list. Write the constraint yourself
+-- >>> insert 5 [1..10]
+-- [1,2,3,4,5,5,6,7,8,9,10]
+-- >>> insert 5 [2, 4 .. 42]
+-- [2,4,5,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42]
+insert :: Ord a => a -> [a] -> [a]
+insert x [] = [x]
+insert x (y : ys)
+  | x > y = y : insert x ys
+  | otherwise = x : y : ys
+
+-- EXERCISE
+-- Implement insertion sort.
+-- >>> sort [4,12,3,1,1,2,34]
+-- [1,1,2,3,4,12,34]
+sort :: Ord a => [a] -> [a]
+sort = foldr insert []
+
+-- EXERCISE
+-- Functions with the same domain and codomain form a monoid.
+-- Implement it.
+newtype Endo a = Endo (a -> a)
+
+getEndo :: Endo a -> a -> a
+getEndo (Endo f) = f
+
+-- EXAMPLES
+-- >>> getEndo (foldMap Endo [succ, succ, (*2), succ]) 5
+-- 14
+-- >>> getEndo (foldMap Endo [(3:), (++[1,2,3])]) [4,2]
+-- [3,4,2,1,2,3]
+
+instance Semigroup (Endo a) where
+  Endo f <> Endo g = Endo $ f . g
+
+instance Monoid (Endo a) where
+  mempty = Endo id
+
+-- EXERCISE
+-- Implement foldr via foldMap, by using the Endo Monoid.
+-- EXAMPLES
+-- >>> foldrViaFoldMap (++) [] [[1,2,3],[4,5,6],[7,8,9]]
+-- [1,2,3,4,5,6,7,8,9]
+-- >>> foldrViaFoldMap (+) 0 [1..10]
+-- 55
+foldrViaFoldMap :: (a -> b -> b) -> b -> [a] -> b
+foldrViaFoldMap f nv xs = getEndo (foldMap (Endo . f) xs) nv
