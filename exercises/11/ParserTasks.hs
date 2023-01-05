@@ -15,41 +15,101 @@ import Control.Applicative (many, some, (<|>))
 import Data.Char
 import Parser (Parser, nom, parse, parseFailure, succeed)
 
+-- Maybe
+-- []
+-- IO
+
+-- Maybe Char
+-- парсване == String -> структурирано
+
+-- "12345" -> 12345
+
+-- "12345" -> Just 12345
+-- "1234q" -> Nothing
+
+-- nom - винаги успява
+-- винаги връща едно символче
+-- nom "asdf" -> Just 'a'
+
+-- "[1,2,3]" -> [1,2,3]
+
 -- Parser a - a value which, when given a string, will attempt to parse it and produce an @a@
 
+-- parser combinators
+
+-- nom
+-- parseFailure
+
 -- Things we have available:
+
+-- Parser a
 
 -- "Constructors"/producers:
 -- nom :: Parser Char - consume a single char and return it
 -- parseFailure :: Parser a - fail regardless of the input
+-- succeed :: a -> Parser a - regardless of what the input is, always produce the given argument as output
 -- "Destructors"/consumers:
 -- parse :: Parser a -> String -> Maybe a
 -- Combinators:
 -- do syntax - sequence multiple parsers, allowing you to use their results
--- succeed :: a -> Parser a - regardless of what the input is, always produce the given argument as output
 -- (<|>) :: Parser a -> Parser a -> Parser a - px <|> py will first try px, backtracking and trying py if px fails
 -- many :: Parser a -> Parser [a] - run the given parser as many times as possible, until it fails, permitting 0 parses
 -- some :: Parser a -> Parser [a] - same as many, but some requires that the given parser succeed at least once
 
+-- m a
+-- m == Parser
+-- a == (Char, Char, Char, Char)
+
+fourChars :: Parser [Char]
+fourChars = do
+  (x :: Char) <- (nom :: Parser Char)
+  y <- nom
+  u <- nom
+  v <- nom
+  succeed [x, y, u, v]
+
+sixteenChars :: Parser [Char]
+sixteenChars = do
+  x <- fourChars
+  y <- fourChars
+  u <- fourChars
+  v <- fourChars
+  succeed $ x ++ y ++ u ++ v
+
+-- (<|>)
+-- px <|> py
+
 -- IMPLEMENT
 char :: Char -> Parser Char
-char = undefined
+char c = do
+  x <- nom
+  if x == c
+    then succeed c
+    else parseFailure
 
 -- IMPLEMENT
+--
 optional :: Parser a -> Parser (Maybe a)
-optional = undefined
+optional px = successCase <|> succeed Nothing
+  where
+    -- (<|>) :: Parser a -> Parser a -> Parser a
+    -- successCase :: Parser (Maybe a)
+    successCase = do
+      x <- px
 
--- IMPLEMENT
-parseThreeChars' :: Parser (Char, Char, Char)
-parseThreeChars' = undefined
+      succeed $ Just x
 
 -- IMPLEMENT
 parseNChar :: Int -> Parser [Char]
-parseNChar = undefined
+parseNChar 0 = succeed []
+parseNChar n = do
+  c <- nom
+  cs <- parseNChar (n - 1)
+  succeed $ c : cs
 
-data Animal
+data Animal = Cat | Dog
 
--- IMPLEMENT
+-- EXERCISE
 parseAnimal :: Parser Animal
 parseAnimal = undefined
 
