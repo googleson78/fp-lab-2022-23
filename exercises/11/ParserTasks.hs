@@ -62,7 +62,8 @@ import Parser (Parser, nom, parse, parseFailure, succeed)
 
 fourChars :: Parser [Char]
 fourChars = do
-  (x :: Char) <- (nom :: Parser Char)
+  -- (x :: Char) <- (nom :: Parser Char)
+  x <- nom
   y <- nom
   u <- nom
   v <- nom
