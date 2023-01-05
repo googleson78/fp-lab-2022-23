@@ -211,6 +211,7 @@ reverse = undefined
 -- EXERCISE
 -- Now use First, foldMap, the monoid for tuples and Dual to implement a function which works like find
 -- but instead returns the first and the last element matching a predicate
+-- TODO: examples
 findFirstAndLast :: (a -> Bool) -> [a] -> Maybe (a, a)
 findFirstAndLast = undefined
 
