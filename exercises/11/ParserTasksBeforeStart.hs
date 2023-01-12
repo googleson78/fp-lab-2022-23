@@ -87,14 +87,15 @@ times = undefined
 digitParser :: Parser Integer
 digitParser = undefined
 
--- EXERCISE
--- Convert a list of integers, assuming they are digits, to a number.
--- >>> digitListToInteger [1, 2, 3]
--- 123
--- >>> digitListToInteger [0, 1, 2, 3]
--- 123
+-- Converts a list of integers, assuming they are digits, to a number.
+--- >>> digitListToInteger [1, 2, 3]
+--- 123
+--- >>> digitListToInteger [0, 1, 2, 3]
+--- 123
 digitListToInteger :: [Integer] -> Integer
-digitListToInteger = undefined
+digitListToInteger = go . reverse
+  where
+    go = foldr (\x r -> r * 10 + x) 0
 
 -- EXERCISE
 -- Combine digitParser and digitListToInteger to produce a parser for numbers.
