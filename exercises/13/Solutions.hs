@@ -78,7 +78,7 @@ get = MkState $ \s -> (s, s)
 -- >>> execUsingState 5 $ put 13
 -- 13
 put :: s -> State s ()
-put = modify . const
+put x = modify $ const x
 
 -- EXERCISE
 -- Modify the current state
@@ -183,7 +183,11 @@ instance Monad (State s) where
 -- >>> execUsingState 0 $ traverse (\x -> modify (+x)) [1,2,3]
 -- 6
 traverse :: Applicative m => (a -> m b) -> [a] -> m [b]
-traverse f = foldr (liftA2 (:) . f) (pure [])
+-- alternatively
+-- traverse f = foldr (liftA2 (:) . f) (pure [])
+-- "more understandable" solution
+traverse _ [] = pure []
+traverse f (x : xs) = liftA2 (:) (f x) (traverse f xs)
 
 -- EXERCISE
 -- We'll be implementing an interpreter for a small language with two parts - a pure *expression* language and imperative top level statements to execute, top-to-bottom.
