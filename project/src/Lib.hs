@@ -92,7 +92,7 @@ makeTreeAndLeaves s = (makeTree (helperTree s ""), (tail (init (helperLeaves (in
         else helperLeaves cs
 
 
-main :: IO()
+main :: IO ()
 main = do
     word <- readFile "encodeInput.txt"
     print (encode word)
