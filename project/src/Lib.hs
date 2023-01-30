@@ -171,11 +171,11 @@ encode_histogram s = helper (fst tree_uniques) "" [] (snd tree_uniques)
 
 
 encode :: String -> String
-encode s = helper s ""
+encode s = helper s
   where
     code_histogram = encode_histogram s
-    helper "" res = res
-    helper (c:cs) res = (value c code_histogram) ++ helper cs res
+    helper "" = ""
+    helper (c:cs) = (value c code_histogram) ++ helper cs
 
 
 decode :: (Tree a, String) -> String -> String
