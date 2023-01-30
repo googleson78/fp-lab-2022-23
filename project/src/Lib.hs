@@ -6,6 +6,10 @@ type Dict a b = [(a, b)]
 data Tree a = Null | Node a (Tree a) (Tree a)
     deriving (Eq, Show)
 
+fromMaybe :: Maybe a -> a
+fromMaybe Nothing = error "Nothing!"
+fromMaybe (Just x) = x
+
 makeTree :: String -> Tree Int
 makeTree "" = Null
 makeTree (c0:r) = 
@@ -13,18 +17,18 @@ makeTree (c0:r) =
   then 
     (if (head r) == 'u' 
     then Null 
-    else (Node (getValue r 0) 
+    else (Node (fromMaybe (getValue r 0)) 
     (makeTree (left r)) 
-    (makeTree (right (tail (rest r)) 1)))) 
+    (makeTree (right (tail (fromMaybe (rest r))) 1)))) 
   else (makeTree r)
   where
-    getValue "" _ = error "Invalid string!"
+    getValue "" _ = Nothing
     getValue (c:cs) res = 
       if (isDigit c) 
         then getValue cs (10 * res + (digitToInt c)) 
         else 
           (if res > 0 
-          then res 
+          then Just res 
           else getValue cs res)
     
     helper :: String -> Int -> String -> String
@@ -38,19 +42,19 @@ makeTree (c0:r) =
           then helper cs (n - 1) (c:res) 
           else  helper cs n (c:res))
     
-    rest "" = error "Invalid string!"
+    rest "" = Nothing
     rest (c:cs) = 
       if c == '(' 
-        then (c:cs) 
+        then Just (c:cs) 
         else 
           (if c == 'N' && (head cs) == 'u' 
-          then c:cs 
+          then Just (c:cs) 
           else rest cs)
     
     left s = 
-      if (take 4 (rest s)) == "Null" 
+      if (take 4 (fromMaybe (rest s))) == "Null" 
         then "Null" 
-        else '(':helper (tail (rest s)) 1 ""
+        else '(':helper (tail (fromMaybe (rest s))) 1 ""
     
     right :: String -> Int -> String
     right "" _ = ""
@@ -96,56 +100,48 @@ main = do
     bits <- readFile "decodeBitsInput.txt"
     print (decode (makeTreeAndLeaves tree) bits)
 
-in_keys :: Eq a => a -> Dict a b -> Bool
-in_keys _ [] = False
-in_keys x (y:ys) = if x == (fst y) then True else in_keys x ys
-
-
-value :: Eq a => a -> Dict a b -> b
-value _ [] = error "Key not in dictionary!"
-value x (y:ys) = if x == (fst y) then (snd y) else value x ys
+value :: Eq a => a -> Dict a b -> Maybe b
+value _ [] = Nothing
+value x (y:ys) = if x == (fst y) then Just (snd y) else value x ys
 
 
 increment :: Eq a => a -> Dict a Int -> Dict a Int
-increment _ [] = []
-increment _el (x:xs) = if _el == (fst x) then (_el, (snd x + 1)):xs else x:(increment _el xs)
+increment el [] = [(el, 1)]
+increment el (x:xs) = if el == (fst x) then (el, (snd x + 1)):xs else x:(increment el xs)
 
 
 histogram :: Eq a => [a] -> Dict a Int
 histogram s = helper s []
   where
     helper [] res = res
-    helper (c:cs) res = if in_keys c res then helper cs (increment c res) else helper cs ((c, 1):res)
+    helper (c:cs) res = helper cs (increment c res)
 
 
-least :: Dict a Int -> a
-least [] = error "Empty dictionary!"
-least (p:ps) = helper (fst p) ps (snd p)
+least :: Dict a Int -> Maybe a
+least [] = Nothing
+least (p:ps) = Just (helper (fst p) ps (snd p))
   where
     helper el [] _ = el
     helper el (x:xs) val = if (snd x) < val then helper (fst x) xs (snd x) else helper el xs val
 
 
 remove :: Eq a => a -> [a] -> [a]
-remove el l = helper el l []
-  where
-    helper _ [] res = reverse res
-    helper x (y:ys) res = if x == y then helper x ys res else helper x ys (y:res)
+remove el l = filter (\x -> x /= el) l
 
 
-root :: Tree a -> a
-root Null = error "Empty tree!"
-root (Node n _ _) = n
+root :: Tree a -> Maybe a
+root Null = Nothing
+root (Node n _ _) = Just n
 
 
 hufmanTree :: String -> (Tree Int, String)
 hufmanTree "" = (Null, "")
-hufmanTree s = helper (remove (least_often s) s) ((Node (value (least_often s) (histogram s)) Null Null), [(least_often s)])
+hufmanTree s = helper (remove (least_often s) s) ((Node (fromMaybe (value (least_often s) (histogram s))) Null Null), [(least_often s)])
   where
-    least_often _str = least (histogram _str)
+    least_often _str = fromMaybe (least (histogram _str))
     helper str res = if str == "" then res else
-        helper (remove (least_often str) str) ((Node ((root (fst res)) + (value (least_often str) (histogram str)))
-        (Node (value (least_often str) (histogram str)) Null Null) (fst res)), (least_often str):(snd res))
+        helper (remove (least_often str) str) ((Node ((fromMaybe (root (fst res))) + (fromMaybe (value (least_often str) (histogram str))))
+        (Node (fromMaybe (value (least_often str) (histogram str))) Null Null) (fst res)), (least_often str):(snd res))
 
 
 leaf :: Tree a -> Bool
@@ -169,7 +165,7 @@ encode s = helper s
   where
     code_histogram = encode_histogram s
     helper "" = ""
-    helper (c:cs) = (value c code_histogram) ++ helper cs
+    helper (c:cs) = (fromMaybe (value c code_histogram)) ++ helper cs
 
 
 decode :: (Tree Int, String) -> String -> String
