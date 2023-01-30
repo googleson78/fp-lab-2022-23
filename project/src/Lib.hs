@@ -1,11 +1,15 @@
 module Lib where
 import Data.Char
 
+type Dict a b = [(a, b)]
+
+data Tree a = Null | Node a (Tree a) (Tree a)
+    deriving (Eq, Show)
 
 makeTree :: String -> Tree Int
-makeTree (' ':r) = makeTree r
-makeTree (c0:c1:r) = 
-  if c0 == '(' && c1 == 'N' 
+makeTree "" = Null
+makeTree (c0:r) = 
+  if c0 == 'N' 
   then 
     (if (head r) == 'u' 
     then Null 
@@ -54,7 +58,7 @@ makeTree (c0:c1:r) =
       if c == '(' 
         then 
           (if n == 0 
-          then (c:cs) 
+          then c:cs 
           else right cs (n + 1)) 
         else 
           (if c == ')' 
@@ -63,26 +67,25 @@ makeTree (c0:c1:r) =
             (if c == 'N' && n == 0 && (head cs) == 'u' 
             then "Null" 
             else right cs n))
-makeTree _ = Null
 
 
 makeTreeAndLeaves :: String -> (Tree Int, String)
-makeTreeAndLeaves s = (makeTree (helperTree s ""), (tail (init (helperLeaves (init s) ""))))
+makeTreeAndLeaves s = (makeTree (helperTree s ""), (tail (init (helperLeaves (init s)))))
   where
     helperTree "" res = res
     helperTree (c:cs) res = 
       if c == ',' 
-        then (reverse (')':res)) 
+        then reverse (')':res) 
         else helperTree cs (c:res)
     
-    helperLeaves "" res = reverse res
-    helperLeaves (c:cs) res = 
+    helperLeaves "" = ""
+    helperLeaves (c:cs) = 
       if c == ',' 
         then 
           (if cs == "" 
           then error "Invalid string!" 
-          else reverse (helperTree cs "")) 
-        else helperLeaves cs res
+          else reverse (init (helperTree cs ""))) 
+        else helperLeaves cs
 
 
 main :: IO()
@@ -92,10 +95,6 @@ main = do
     tree <- readFile "decodeTreeInput.txt"
     bits <- readFile "decodeBitsInput.txt"
     print (decode (makeTreeAndLeaves tree) bits)
-
-
-type Dict a b = [(a, b)]
-
 
 in_keys :: Eq a => a -> Dict a b -> Bool
 in_keys _ [] = False
@@ -107,25 +106,19 @@ value _ [] = error "Key not in dictionary!"
 value x (y:ys) = if x == (fst y) then (snd y) else value x ys
 
 
-increment :: Eq a => a -> Dict a Integer -> Dict a Integer
-increment el dict = helper el dict []
-  where
-    helper _ [] res = res
-    helper _el (x:xs) res = if _el == (fst x) then (_el, (snd x + 1)):res ++ xs else helper _el xs (x:res)
+increment :: Eq a => a -> Dict a Int -> Dict a Int
+increment _ [] = []
+increment _el (x:xs) = if _el == (fst x) then (_el, (snd x + 1)):xs else x:(increment _el xs)
 
 
-histogram :: Eq a => [a] -> Dict a Integer
+histogram :: Eq a => [a] -> Dict a Int
 histogram s = helper s []
   where
     helper [] res = res
     helper (c:cs) res = if in_keys c res then helper cs (increment c res) else helper cs ((c, 1):res)
 
 
-data Tree a = Null | Node a (Tree a) (Tree a)
-    deriving (Eq, Show, Read)
-
-
-least :: Dict a Integer -> a
+least :: Dict a Int -> a
 least [] = error "Empty dictionary!"
 least (p:ps) = helper (fst p) ps (snd p)
   where
@@ -136,8 +129,8 @@ least (p:ps) = helper (fst p) ps (snd p)
 remove :: Eq a => a -> [a] -> [a]
 remove el l = helper el l []
   where
-    helper _ [] res = res
-    helper x (y:ys) res = if x == y then helper x ys res else y:(helper x ys res)
+    helper _ [] res = reverse res
+    helper x (y:ys) res = if x == y then helper x ys res else helper x ys (y:res)
 
 
 root :: Tree a -> a
@@ -145,7 +138,8 @@ root Null = error "Empty tree!"
 root (Node n _ _) = n
 
 
-hufmanTree :: String -> (Tree Integer, String)
+hufmanTree :: String -> (Tree Int, String)
+hufmanTree "" = (Null, "")
 hufmanTree s = helper (remove (least_often s) s) ((Node (value (least_often s) (histogram s)) Null Null), [(least_often s)])
   where
     least_often _str = least (histogram _str)
@@ -163,11 +157,11 @@ encode_histogram :: String -> Dict Char String
 encode_histogram s = helper (fst tree_uniques) "" [] (snd tree_uniques)
   where
     tree_uniques = hufmanTree s
-    helper Null _ _ _ = error "Empty tree!"
+    helper Null _ _ _ = []
     helper (Node _ lt rt) code res at_leaves = if lt == Null && rt == Null then ((head at_leaves), code):res else (left_res ++ right_res)
       where
-        left_res = if lt /= Null then (helper lt (code ++ "0") res (if leaf lt then [(head at_leaves)] else (init at_leaves))) else []
-        right_res = if rt /= Null then (helper rt (code ++ "1") res (if leaf rt then [(last at_leaves)] else (tail at_leaves))) else []
+        left_res = helper lt (code ++ "0") res (if leaf lt then [(head at_leaves)] else (init at_leaves))
+        right_res = helper rt (code ++ "1") res (if leaf rt then [(last at_leaves)] else (tail at_leaves))
 
 
 encode :: String -> String
@@ -178,7 +172,7 @@ encode s = helper s
     helper (c:cs) = (value c code_histogram) ++ helper cs
 
 
-decode :: (Tree a, String) -> String -> String
+decode :: (Tree Int, String) -> String -> String
 decode (tree, at_leaves) code = helper tree code at_leaves ""
   where
     helper Null _ _ _ = ""
