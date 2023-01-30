@@ -125,10 +125,6 @@ least (p:ps) = Just (helper (fst p) ps (snd p))
     helper el (x:xs) val = if (snd x) < val then helper (fst x) xs (snd x) else helper el xs val
 
 
-remove :: Eq a => a -> [a] -> [a]
-remove el l = filter (\x -> x /= el) l
-
-
 root :: Tree a -> Maybe a
 root Null = Nothing
 root (Node n _ _) = Just n
@@ -136,11 +132,11 @@ root (Node n _ _) = Just n
 
 hufmanTree :: String -> (Tree Int, String)
 hufmanTree "" = (Null, "")
-hufmanTree s = helper (remove (least_often s) s) ((Node (fromMaybe (value (least_often s) (histogram s))) Null Null), [(least_often s)])
+hufmanTree s = helper (filter (\x -> x /= (least_often s)) s) ((Node (fromMaybe (value (least_often s) (histogram s))) Null Null), [(least_often s)])
   where
     least_often _str = fromMaybe (least (histogram _str))
     helper str res = if str == "" then res else
-        helper (remove (least_often str) str) ((Node ((fromMaybe (root (fst res))) + (fromMaybe (value (least_often str) (histogram str))))
+        helper (filter (\x -> x /= (least_often str)) str) ((Node ((fromMaybe (root (fst res))) + (fromMaybe (value (least_often str) (histogram str))))
         (Node (fromMaybe (value (least_often str) (histogram str))) Null Null) (fst res)), (least_often str):(snd res))
 
 
