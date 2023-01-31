@@ -88,16 +88,20 @@ makeTreeAndLeaves s = (makeTree (helperTree s ""), (tail (init (helperLeaves (in
         then 
           (if cs == "" 
           then error "Invalid string!" 
-          else reverse (init (helperTree cs ""))) 
+          else reverse (helperTree (if (head cs) == ' ' then (tail cs) else cs) ""))
         else helperLeaves cs
 
 
 main :: IO ()
 main = do
     word <- readFile "encodeInput.txt"
+    print word
     print (encode word)
     tree <- readFile "decodeTreeInput.txt"
+    print tree
     bits <- readFile "decodeBitsInput.txt"
+    print bits
+    print (makeTreeAndLeaves tree)
     print (decode (makeTreeAndLeaves tree) bits)
 
 value :: Eq a => a -> Dict a b -> Maybe b
