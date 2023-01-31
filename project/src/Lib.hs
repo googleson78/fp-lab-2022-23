@@ -95,13 +95,9 @@ makeTreeAndLeaves s = (makeTree (helperTree s ""), (tail (init (helperLeaves (in
 main :: IO ()
 main = do
     word <- readFile "encodeInput.txt"
-    print word
     print (encode word)
     tree <- readFile "decodeTreeInput.txt"
-    print tree
     bits <- readFile "decodeBitsInput.txt"
-    print bits
-    print (makeTreeAndLeaves tree)
     print (decode (makeTreeAndLeaves tree) bits)
 
 value :: Eq a => a -> Dict a b -> Maybe b
@@ -115,7 +111,7 @@ increment el (x:xs) = if el == (fst x) then (el, (snd x + 1)):xs else x:(increme
 
 
 histogram :: Eq a => [a] -> Dict a Int
-histogram s = helper s []
+histogram s = reverse (helper s [])
   where
     helper [] res = res
     helper (c:cs) res = helper cs (increment c res)
