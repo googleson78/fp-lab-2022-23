@@ -74,7 +74,7 @@ makeTree (c0:r) =
 
 
 makeTreeAndLeaves :: String -> (Tree Int, String)
-makeTreeAndLeaves s = (makeTree (helperTree s ""), (tail (init (helperLeaves (init s)))))
+makeTreeAndLeaves s = (makeTree (helperTree s ""), (tail (init (fromMaybe (helperLeaves (init s))))))
   where
     helperTree "" res = res
     helperTree (c:cs) res = 
@@ -82,13 +82,13 @@ makeTreeAndLeaves s = (makeTree (helperTree s ""), (tail (init (helperLeaves (in
         then reverse (')':res) 
         else helperTree cs (c:res)
     
-    helperLeaves "" = ""
+    helperLeaves "" = Just ""
     helperLeaves (c:cs) = 
       if c == ',' 
         then 
           (if cs == "" 
-          then error "Invalid string!" 
-          else reverse (helperTree (if (head cs) == ' ' then (tail cs) else cs) ""))
+          then Nothing 
+          else Just (reverse (helperTree (if (head cs) == ' ' then (tail cs) else cs) "")))
         else helperLeaves cs
 
 
